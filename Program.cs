@@ -1,14 +1,10 @@
 ﻿List<Patient> patients = new List<Patient>();
 
-Patient p1 = new Patient();
-p1.Name = "Saul Goodman";
-p1.Medication = "Lisinopril";
+Patient p1 = new Patient("Saul Goodman", "Lisinopril");
 p1.DaysSinceLastFill = 30;
 patients.Add(p1);
 
-Patient pt2 = new Patient();
-pt2.Name = "Walter White"; 
-pt2.Medication = "Atorvastatin";
+Patient pt2 = new Patient("Walter White", "Atorvastatin");
 pt2.DaysSinceLastFill = 10;
 patients.Add(pt2);
 
@@ -28,10 +24,10 @@ enum DeliveryBatch
     Midnight
 }
 
-class Patient
+class Patient(string name, string medication)
 {
-    public string Name { get; set; }
-    public string Medication { get; set; }
+    public string Name { get; set; } = name;
+    public string Medication { get; set; } = medication;
     public int DaysSinceLastFill { get; set; }
 
     public bool IsRefillTooSoon()
