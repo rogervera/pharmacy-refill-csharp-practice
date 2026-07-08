@@ -2,6 +2,7 @@
 
 Patient p1 = new Patient("Saul Goodman", "Lisinopril");
 p1.DaysSinceLastFill = 30;
+p1.HasPriorAuth = true;
 patients.Add(p1);
 
 Patient pt2 = new Patient("Walter White", "Atorvastatin");
@@ -39,6 +40,8 @@ class Patient(string name, string medication)
     public string Medication { get; set; } = medication;
     public int DaysSinceLastFill { get; set; }
 
+    public bool HasPriorAuth { get; set; }
+
     private bool IsRefillTooSoon()
     {
         return DaysSinceLastFill < 27;
@@ -46,7 +49,11 @@ class Patient(string name, string medication)
 
     public RejectCode GetRejectCode()
     {
-        if (IsRefillTooSoon())
+        if (!HasPriorAuth)
+        {
+            return RejectCode.PriorAuthRequired;
+        }
+        else if (IsRefillTooSoon())
         {
             return RejectCode.RefillTooSoon;
         }
