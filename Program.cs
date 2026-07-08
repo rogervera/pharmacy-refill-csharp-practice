@@ -8,7 +8,7 @@ Patient pt2 = new Patient("Walter White", "Atorvastatin");
 pt2.DaysSinceLastFill = 10;
 patients.Add(pt2);
 
-List<Patient> approvedPatients = patients.Where(p => !p.IsRefillTooSoon()).ToList();
+List<Patient> approvedPatients = patients.Where(p => p.GetRejectCode() == RejectCode.None).ToList();
 
 Console.WriteLine($"Approved count: {approvedPatients.Count}");
 
@@ -24,15 +24,33 @@ enum DeliveryBatch
     Midnight
 }
 
+enum RejectCode
+{
+    Unspecified,
+    None,
+    RefillTooSoon,
+    PriorAuthRequired,
+    NonMatchedCardholder,
+}
+
 class Patient(string name, string medication)
 {
     public string Name { get; set; } = name;
     public string Medication { get; set; } = medication;
     public int DaysSinceLastFill { get; set; }
 
-    public bool IsRefillTooSoon()
+    private bool IsRefillTooSoon()
     {
         return DaysSinceLastFill < 27;
+    }
+
+    public RejectCode GetRejectCode()
+    {
+        if (IsRefillTooSoon())
+        {
+            return RejectCode.RefillTooSoon;
+        }
+        return RejectCode.None;
     }
 
     public DeliveryBatch AssignBatch(int currentHour)
