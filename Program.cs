@@ -1,13 +1,29 @@
 ﻿List<Patient> patients = new List<Patient>();
 
-Patient p1 = new Patient("Saul Goodman", "Lisinopril");
-p1.DaysSinceLastFill = 30;
-p1.HasPriorAuth = true;
-patients.Add(p1);
+Console.WriteLine("Enter patient name:");
+string name = Console.ReadLine() ?? "Unknown";
 
-Patient pt2 = new Patient("Walter White", "Atorvastatin");
-pt2.DaysSinceLastFill = 10;
-patients.Add(pt2);
+Console.WriteLine("Enter medication:");
+string medication = Console.ReadLine() ?? "Unknown";
+
+Console.WriteLine("Enter days since last fill:");
+string daysInput = Console.ReadLine() ?? "";
+int daysSinceLastFill;
+if (!int.TryParse(daysInput, out daysSinceLastFill))
+{
+    daysSinceLastFill = 0;
+}
+
+Console.WriteLine("Does the patient have prior authorization? (yes/no):");
+string hasPriorAuthInput = Console.ReadLine() ?? "no";
+bool hasPriorAuth = string.Equals(hasPriorAuthInput, "yes", StringComparison.OrdinalIgnoreCase) || string.Equals(hasPriorAuthInput, "y", StringComparison.OrdinalIgnoreCase);
+
+Patient p1 = new Patient(name, medication)
+{
+    DaysSinceLastFill = daysSinceLastFill,
+    HasPriorAuth = hasPriorAuth
+};
+patients.Add(p1);
 
 List<Patient> approvedPatients = patients.Where(p => p.GetRejectCode() == RejectCode.None).ToList();
 
